@@ -1,20 +1,8 @@
-%%
-%% SUNDAS EJAZ
-%%  
-%% CFAR PARAMETERS
-Tr = 10;   % Training cells (range)
-Td = 8;    % Training cells (doppler)
-
-Gr = 4;    % Guard cells (range)
-Gd = 4;    % Guard cells (doppler)
-
-offset = 6; % Threshold offset (dB)
+function CFAR_map = cfar(RDM, Tr, Td, Gr, Gd, offset)
 
 [R, D] = size(RDM);
-
 CFAR_map = zeros(R, D);
 
-%% CFAR PROCESS
 for i = Tr+Gr+1 : R-(Tr+Gr)
     for j = Td+Gd+1 : D-(Td+Gd)
         
@@ -30,7 +18,6 @@ for i = Tr+Gr+1 : R-(Tr+Gr)
             end
         end
         
-        % Number of training cells
         num_cells = ((2*(Tr+Gr)+1)*(2*(Td+Gd)+1)) - ((2*Gr+1)*(2*Gd+1));
         
         threshold = pow2db(noise_level / num_cells);
@@ -47,11 +34,4 @@ for i = Tr+Gr+1 : R-(Tr+Gr)
     end
 end
 
-%% Plot CFAR Output
-figure;
-surf(doppler_axis, range_axis, CFAR_map);
-title('CFAR Detection Map');
-xlabel('Doppler');
-ylabel('Range');
-zlabel('Detection');
-shading interp;
+end
